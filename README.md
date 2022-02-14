@@ -1,38 +1,20 @@
 # @fifteen/loco-redis
 
-Service to fetch loco and store translations in a redis database. To be used in a nodeJS server.
+Command line formatter of Vue SFC files that uses stylus as style.
+This tool uses [Manta’s Stylus Supremacy](https://thisismanta.github.io/stylus-supremacy) under the hood.
 
 ## Installation
 
-- `npm install --save @fifteen/loco-redis`
-- `yarn add @fifteen/loco-redis`
+- `npm install --save-dev @qnp/lus`
+- `yarn add -D @qnp/lus`
 
 ## Usage
 
-```js
-import LocoRedis from '@fifteen/loco-redis';
-
-// Create service instance with your config (see docs for implementation)
-const locoRedisService = new LocoRedis({
-  /* configuration */
-});
-
-// Connect and disconnect to redis db
-locoRedisService.connectRedisClient();
-locoRedisService.disconnectRedisClient();
-
-// Manage translations, for instance in an Express controller or a Fastify handler
-// (see docs for full implementation)
-locoRedisService.manageTranslations({
-  lang: 'en',
-  localFilesDirPath: './translations',
-});
-
-// In a build process, build local translation files
-locoRedisService.buildTranslationFiles('en', './translations');
+Type:
+```sh
+lus -h
 ```
-
-For more details, see [docs](docs).
+to print usage.
 
 ## Development and contribution
 

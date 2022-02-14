@@ -7,9 +7,6 @@ test:
 coverage:
 	yarn coverage
 
-doc:
-	yarn doc
-
 build:
 	yarn build
 
@@ -21,5 +18,5 @@ release:
 	@if [ -z "$(GIT_STATUS)" ]; then echo "Clean working dir"; else echo "\x1b[31mYou have uncommited changes. Aborting.\x1b[0m"; exit 1; fi
 	yarn test
 	yarn build
-	npm publish
+	npm publish --access public
 	git tag $(PACKAGE_NAME)-$(PACKAGE_VERSION)
