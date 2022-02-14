@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "alwaysStrict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "module": "esnext",
+    "target": "es6"
+  },
+  "files": [
+    "src/lib.ts",
+    "src/cli.ts"
+  ]
+}

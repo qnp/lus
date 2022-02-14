@@ -1,0 +1,50 @@
+{
+  "name": "@qnp/lus",
+  "version": "0.1.0",
+  "description": "Command-line formatting of <style lang='stylus'> in Vue SFC files using Stylus Supremacy",
+  "main": "dist/cli.js",
+  "bin": {
+    "lus": "dist/cli.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "coverage": "jest --coverage",
+    "doc": "typedoc --plugin typedoc-plugin-markdown --readme none --out docs src/index.ts",
+    "release": "make release",
+    "build": "tsc --outDir dist"
+  },
+  "keywords": [
+    "vue",
+    "sfc",
+    "stylus",
+    "lint",
+    "pretty",
+    "format",
+    "stylus-supremacy"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qnp/lus.git"
+  },
+  "homepage": "https://github.com/qnp/lus#readme",
+  "author": "François Risoud",
+  "license": "MIT",
+  "type": "module",
+  "engine": {
+    "node": ">=16"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/jest": "^27.4.0",
+    "jest": "^27.4.7",
+    "ts-jest": "^27.1.3",
+    "typedoc": "^0.22.11",
+    "typedoc-plugin-markdown": "^3.11.12",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "commander": "^9.0.0",
+    "glob": "^7.2.0",
+    "stylus-supremacy": "^2.15.0"
+  }
+}
