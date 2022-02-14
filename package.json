@@ -1,6 +1,6 @@
 {
   "name": "@qnp/lus",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Command-line formatting of <style lang='stylus'> in Vue SFC files using Stylus Supremacy",
   "main": "dist/cli.js",
   "bin": {
