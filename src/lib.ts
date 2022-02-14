@@ -91,59 +91,73 @@ export class Lus {
    * Format a file based on its path and the formatting options
    * @param filePath - The file path
    * @param stylusSupremacyOptions - The resolved stylus supremacy options
+   * @async
    */
-  public format(filePath: string) {
-    try {
-      // Get file content
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
+  public async format(filePath: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        // Get file content
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
 
-      // Select text that is contained between <style lang="stylus"> and </style>
-      const startStyleMatch = fileContent.match(/<style\s+lang="stylus"\s*>/);
-      const startStyleTag = startStyleMatch?.[0];
-      const startStyle = startStyleMatch?.index;
-      if (startStyleTag && startStyle) {
-        const endStyle = fileContent.indexOf('</style>');
-        const styleContent = fileContent.substring(
-          startStyle + startStyleTag.length,
-          endStyle
-        );
-        const formattedStyle = stylusSupremacy.format(
-          styleContent,
-          this.stylusSupremacyOptions
-        );
+        // Select text that is contained between <style lang="stylus"> and </style>
+        const startStyleMatch = fileContent.match(/<style\s+lang="stylus"\s*>/);
+        const startStyleTag = startStyleMatch?.[0];
+        const startStyle = startStyleMatch?.index;
+        if (startStyleTag && startStyle) {
+          const endStyle = fileContent.indexOf('</style>');
+          const styleContent = fileContent.substring(
+            startStyle + startStyleTag.length,
+            endStyle
+          );
+          const formattedStyle = stylusSupremacy.format(
+            styleContent,
+            this.stylusSupremacyOptions
+          );
 
-        // Write new file content
-        const newFileContent = fileContent.replace(
-          styleContent,
-          formattedStyle
-        );
-        fs.writeFileSync(filePath, newFileContent, 'utf-8');
+          // Write new file content
+          const newFileContent = fileContent.replace(
+            styleContent,
+            formattedStyle
+          );
+          fs.writeFileSync(filePath, newFileContent, 'utf-8');
+        }
+        resolve();
+      } catch (error: any) {
+        this.logger.error(error);
+        reject(error);
       }
-    } catch (error: any) {
-      this.logger.error(error);
-    }
+    });
   }
 
   /**
    * Run the formatter on all files matching the glob pattern
+   * @async
    */
-  public run() {
+  public async run(): Promise<void> {
     // Build glob options
     const globOptions = {
       ignore: ['node_modules/**/*', ...this.options.ignore],
     };
-    glob.glob(
-      this.options.glob,
-      globOptions,
-      (err: Error | null, files: string[]) => {
-        if (err) this.logger.error(err);
-        else {
-          for (const file of files) {
-            this.logger.log('formatting', file);
-            this.format(file);
+    return new Promise((resolve, reject) => {
+      glob.glob(
+        this.options.glob,
+        globOptions,
+        (err: Error | null, files: string[]) => {
+          if (err) {
+            this.logger.error(err);
+            reject(err);
+          } else {
+            if (!files.length) resolve();
+            files.reduce((seq: Promise<void>, file: string, index: number) => {
+              return seq.then(() => {
+                this.logger.log('formatting', file);
+                if (index === files.length - 1) resolve();
+                return this.format(file);
+              });
+            }, Promise.resolve());
           }
         }
-      }
-    );
+      );
+    });
   }
 }

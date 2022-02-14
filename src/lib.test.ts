@@ -40,8 +40,8 @@ const inputStyle = `.Test {
 }`;
 
 const outputStyleDefault = `.Test {
-	padding 10px;
-	color red;
+	padding: 10px;
+	color: red;
 }`;
 
 const outputStyleWithConfig = `.Test
@@ -50,6 +50,11 @@ const outputStyleWithConfig = `.Test
 
 beforeAll(() => {
   if (!fs.existsSync('.test')) fs.mkdirSync('.test');
+  fs.writeFileSync(
+    '.test/.stylusrc',
+    JSON.stringify(testFormattingConfig),
+    'utf-8'
+  );
 });
 
 afterAll(() => {
@@ -97,40 +102,31 @@ describe('Lus options resolver', () => {
     const consoleWarn = jest
       .spyOn(global.console, 'warn')
       .mockImplementation(() => {});
-    const defaultTestLus = new Lus(testLusOptions);
+    const defaultTestLus = new Lus({ ...testLusOptions, config: '.missingrc' });
     expect(defaultTestLus.getConfigFileOptions()).toEqual({});
     expect(consoleWarn).toHaveBeenCalled();
   });
 
   it('gets the config from .stylusrc', () => {
-    fs.writeFileSync(
-      '.test/.stylusrc',
-      JSON.stringify(testFormattingConfig),
-      'utf-8'
-    );
     const defaultTestLus = new Lus(testLusOptions);
     expect(defaultTestLus.getConfigFileOptions()).toEqual(testFormattingConfig);
   });
 });
 
 describe('Lus formatter', () => {
-  it('formats file with default options', () => {
+  it('formats file with default options', async () => {
     fs.writeFileSync('.test/Test.vue', testVueContent(inputStyle), 'utf-8');
-    const defaultTestLus = new Lus(testLusOptions);
+    const defaultTestLus = new Lus({ ...testLusOptions, config: '.missingrc' });
+    await defaultTestLus.format('.test/Test.vue');
     expect(fs.readFileSync('.test/Test.vue', 'utf-8')).toEqual(
       testVueContent(outputStyleDefault)
     );
   });
 
-  it('formats file with the config from .stylusrc', () => {
-    fs.writeFileSync(
-      '.test/.stylusrc',
-      JSON.stringify(testFormattingConfig),
-      'utf-8'
-    );
+  it('formats file with the config from .stylusrc', async () => {
     fs.writeFileSync('.test/Test.vue', testVueContent(inputStyle), 'utf-8');
     const defaultTestLus = new Lus(testLusOptions);
-    defaultTestLus.format('.test/Test.vue');
+    await defaultTestLus.format('.test/Test.vue');
     expect(fs.readFileSync('.test/Test.vue', 'utf-8')).toEqual(
       testVueContent(outputStyleWithConfig)
     );
@@ -138,12 +134,26 @@ describe('Lus formatter', () => {
 });
 
 describe('Lus runner', () => {
-  it('runs on found files', () => {
+  it('runs on found files with glob .**/*.vue', async () => {
     fs.writeFileSync('.test/Test.vue', testVueContent(inputStyle), 'utf-8');
-    const defaultTestLus = new Lus(testLusOptions);
-    defaultTestLus.run();
+    const defaultTestLus = new Lus({
+      ...testLusOptions,
+      glob: '.**/*.vue',
+    });
+    await defaultTestLus.run();
     expect(fs.readFileSync('.test/Test.vue', 'utf-8')).toEqual(
-      testVueContent(outputStyleDefault)
+      testVueContent(outputStyleWithConfig)
+    );
+  });
+  it('runs on a given file path', async () => {
+    fs.writeFileSync('.test/Test.vue', testVueContent(inputStyle), 'utf-8');
+    const defaultTestLus = new Lus({
+      ...testLusOptions,
+      glob: '.test/Test.vue',
+    });
+    await defaultTestLus.run();
+    expect(fs.readFileSync('.test/Test.vue', 'utf-8')).toEqual(
+      testVueContent(outputStyleWithConfig)
     );
   });
 });

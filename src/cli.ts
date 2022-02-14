@@ -26,6 +26,7 @@ program
   .version(version);
 
 program
+  .argument('<glob>', 'File or glob to format on')
   .option('-v, --verbose', 'verbose output', false)
   .option('-g, --glob <glob>', 'the glob pattern to match files', '**/*.vue')
   .option('-c, --config <config>', 'the config file to use', '.stylusrc')
@@ -34,11 +35,14 @@ program
     'ignore files using these comma-separated glob patterns',
     (value: string) => value.split(','),
     []
-  );
+  ).action((glob: string, options: Omit<LusOptions, 'glob'>) => {
+    console.log(glob, options);
+    const lusOptions: LusOptions = {
+      ...options,
+      glob,
+    }
+    const lus = new Lus(lusOptions);
+    lus.run();
+  })
 
 program.parse();
-
-const lusOptions: LusOptions = program.opts();
-const lus = new Lus(lusOptions);
-
-lus.run();
