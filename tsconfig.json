@@ -5,7 +5,8 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "module": "esnext",
-    "target": "es6"
+    "target": "es6",
+    "declaration": true
   },
   "files": [
     "src/lib.ts",

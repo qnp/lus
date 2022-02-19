@@ -26,20 +26,18 @@ program
   .version(version);
 
 program
-  .argument('<glob>', 'File or glob to format on')
+  .argument('<files/globs...>', 'Files or globs to format on')
   .option('-v, --verbose', 'verbose output', false)
-  .option('-g, --glob <glob>', 'the glob pattern to match files', '**/*.vue')
   .option('-c, --config <config>', 'the config file to use', '.stylusrc')
   .option(
     '-i, --ignore <globs>',
     'ignore files using these comma-separated glob patterns',
     (value: string) => value.split(','),
     []
-  ).action((glob: string, options: Omit<LusOptions, 'glob'>) => {
-    console.log(glob, options);
+  ).action((globs: string[], options: Omit<LusOptions, 'globs'>) => {
     const lusOptions: LusOptions = {
       ...options,
-      glob,
+      globs,
     }
     const lus = new Lus(lusOptions);
     lus.run();

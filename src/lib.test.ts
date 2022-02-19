@@ -6,7 +6,7 @@ const testLusOptions: LusOptions = {
   verbose: true,
   config: '.test/.stylusrc',
   ignore: [],
-  glob: '**/*.vue',
+  globs: ['**/*.vue'],
 };
 
 const testFormattingConfig = {
@@ -138,7 +138,7 @@ describe('Lus runner', () => {
     fs.writeFileSync('.test/Test.vue', testVueContent(inputStyle), 'utf-8');
     const defaultTestLus = new Lus({
       ...testLusOptions,
-      glob: '.**/*.vue',
+      globs: ['.**/*.vue'],
     });
     await defaultTestLus.run();
     expect(fs.readFileSync('.test/Test.vue', 'utf-8')).toEqual(
@@ -149,10 +149,25 @@ describe('Lus runner', () => {
     fs.writeFileSync('.test/Test.vue', testVueContent(inputStyle), 'utf-8');
     const defaultTestLus = new Lus({
       ...testLusOptions,
-      glob: '.test/Test.vue',
+      globs: ['.test/Test.vue'],
     });
     await defaultTestLus.run();
     expect(fs.readFileSync('.test/Test.vue', 'utf-8')).toEqual(
+      testVueContent(outputStyleWithConfig)
+    );
+  });
+  it('runs on multiple globs or file paths', async () => {
+    fs.writeFileSync('.test/Test1.vue', testVueContent(inputStyle), 'utf-8');
+    fs.writeFileSync('.test/Test2.vue', testVueContent(inputStyle), 'utf-8');
+    const defaultTestLus = new Lus({
+      ...testLusOptions,
+      globs: ['.test/Test1.vue', '.test/*2.vue'],
+    });
+    await defaultTestLus.run();
+    expect(fs.readFileSync('.test/Test1.vue', 'utf-8')).toEqual(
+      testVueContent(outputStyleWithConfig)
+    );
+    expect(fs.readFileSync('.test/Test2.vue', 'utf-8')).toEqual(
       testVueContent(outputStyleWithConfig)
     );
   });

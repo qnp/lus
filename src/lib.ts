@@ -3,7 +3,8 @@ import * as path from 'path';
 import * as stylusSupremacy from 'stylus-supremacy';
 import type { FormattingOptions } from 'stylus-supremacy';
 
-import glob from 'glob';
+import Glob from 'glob';
+const glob = Glob.glob;
 
 const LUS = '\x1b[36mLus:\x1b[0m';
 const WARNING = '\x1b[33mwarning\x1b[0m';
@@ -44,9 +45,9 @@ export interface LusOptions {
    */
   ignore: string[];
   /**
-   * The glob pattern to match files
+   * The glob patterns to match files
    */
-  glob: string;
+  globs: string[];
 }
 
 /**
@@ -139,25 +140,22 @@ export class Lus {
       ignore: ['node_modules/**/*', ...this.options.ignore],
     };
     return new Promise((resolve, reject) => {
-      glob.glob(
-        this.options.glob,
-        globOptions,
-        (err: Error | null, files: string[]) => {
-          if (err) {
-            this.logger.error(err);
-            reject(err);
-          } else {
-            if (!files.length) resolve();
-            files.reduce((seq: Promise<void>, file: string, index: number) => {
-              return seq.then(() => {
-                this.logger.log('formatting', file);
-                if (index === files.length - 1) resolve();
-                return this.format(file);
-              });
-            }, Promise.resolve());
-          }
-        }
-      );
+      try {
+        const files = this.options.globs.flatMap(pattern =>
+          glob.sync(pattern, globOptions)
+        );
+        if (!files.length) resolve();
+        files.reduce((seq: Promise<void>, file: string, index: number) => {
+          return seq.then(() => {
+            this.logger.log('formatting', file);
+            if (index === files.length - 1) resolve();
+            return this.format(file);
+          });
+        }, Promise.resolve());
+      } catch (error: unknown) {
+        this.logger.error(error);
+        reject(error);
+      }
     });
   }
 }
