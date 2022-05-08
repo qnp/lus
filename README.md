@@ -1,4 +1,4 @@
-# @fifteen/loco-redis
+# @qnp/lus
 
 Command line formatter of Vue SFC files that uses stylus as style.
 This tool uses [Manta’s Stylus Supremacy](https://thisismanta.github.io/stylus-supremacy) under the hood.
