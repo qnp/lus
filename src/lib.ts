@@ -41,6 +41,10 @@ export interface LusOptions {
    */
   config: string;
   /**
+   * Check mode only
+   */
+  check: boolean;
+  /**
    * Ignore files matching these glob patterns
    */
   ignore: string[];
@@ -121,15 +125,19 @@ export class Lus {
               this.stylusSupremacyOptions
               );
             
-            // Write new file content
             newFileContent = newFileContent.replace(
               styleContent,
               formattedStyle
             );
           }
         }
-        
-        fs.writeFileSync(filePath, newFileContent, 'utf-8');
+
+        if(!this.options.check) {
+          // Write new file content
+          fs.writeFileSync(filePath, newFileContent, 'utf-8');
+        }else if(fileContent !== newFileContent) {
+          throw `File ${filePath} is not formatted`;
+        }
         
         resolve();
       } catch (error: any) {
@@ -158,7 +166,9 @@ export class Lus {
           return seq.then(() => {
             this.logger.log('formatting', file);
             if (index === files.length - 1) resolve();
-            return this.format(file);
+            return this.format(file).catch((err: unknown) => {
+              reject(err);
+            });
           });
         }, Promise.resolve());
       } catch (error: unknown) {
