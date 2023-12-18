@@ -100,28 +100,37 @@ export class Lus {
         // Get file content
         const fileContent = fs.readFileSync(filePath, 'utf-8');
 
-        // Select text that is contained between <style lang="stylus"> and </style>
-        const startStyleMatch = fileContent.match(/<style\s+lang="stylus"\s*>/);
-        const startStyleTag = startStyleMatch?.[0];
-        const startStyle = startStyleMatch?.index;
-        if (startStyleTag && startStyle) {
-          const endStyle = fileContent.indexOf('</style>');
-          const styleContent = fileContent.substring(
-            startStyle + startStyleTag.length,
-            endStyle
-          );
-          const formattedStyle = stylusSupremacy.format(
-            styleContent,
-            this.stylusSupremacyOptions
-          );
+        const styleMatches = [
+          ...fileContent.matchAll(
+            /<style[^>]*\s+lang="stylus"[^>]*>/g
+          ),
+        ];
+        let newFileContent = fileContent;
+        for (let styleMatch of styleMatches) {
+          const startStyleTag = styleMatch?.[0];
+          const startStyleIndex = styleMatch?.index;
 
-          // Write new file content
-          const newFileContent = fileContent.replace(
-            styleContent,
-            formattedStyle
-          );
-          fs.writeFileSync(filePath, newFileContent, 'utf-8');
+          if (startStyleTag && startStyleIndex) {
+            const endStyleIndex = fileContent.slice(startStyleIndex).indexOf('</style>') + startStyleIndex;
+            const styleContent = fileContent.substring(
+              startStyleIndex + startStyleTag.length,
+              endStyleIndex
+            );
+            const formattedStyle = stylusSupremacy.format(
+              styleContent,
+              this.stylusSupremacyOptions
+              );
+            
+            // Write new file content
+            newFileContent = newFileContent.replace(
+              styleContent,
+              formattedStyle
+            );
+          }
         }
+        
+        fs.writeFileSync(filePath, newFileContent, 'utf-8');
+        
         resolve();
       } catch (error: any) {
         this.logger.error(error);
