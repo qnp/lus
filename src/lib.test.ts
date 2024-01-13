@@ -138,6 +138,14 @@ describe('Lus formatter', () => {
       testVueContent(outputStyleWithConfig)
     );
   });
+
+  it('throws when file is not formatted if option `check` is true', async () => {
+    fs.writeFileSync('.test/Test.vue', testVueContent(inputStyle), 'utf-8');
+    const defaultTestLus = new Lus({ ...testLusOptions, check: true });
+    await expect(defaultTestLus.format('.test/Test.vue')).rejects.toThrow(
+      'File .test/Test.vue is not formatted'
+    );
+  });
 });
 
 describe('Lus runner', () => {
