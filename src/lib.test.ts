@@ -29,6 +29,14 @@ const testVueContent = (style: string) => `<template lang="pug">
 ${style}
 </style>
 
+<style lang="stylus" scoped>
+${style}
+</style>
+
+<style lang="stylus" rel="stylesheet/stylus">
+${style}
+</style>
+
 <script setup lang="ts">
 // silence is golden
 </script>
