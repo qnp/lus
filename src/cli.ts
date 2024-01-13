@@ -29,7 +29,7 @@ program
   .argument('<files/globs...>', 'Files or globs to format on')
   .option('-v, --verbose', 'verbose output', false)
   .option('-c, --config <config>', 'the config file to use', '.stylusrc')
-  .option('-C, --check', 'check if files are formatted', false)
+  .option('-C, --check', 'only check if files are formatted', false)
   .option(
     '-i, --ignore <globs>',
     'ignore files using these comma-separated glob patterns',

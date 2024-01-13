@@ -41,7 +41,7 @@ export interface LusOptions {
    */
   config: string;
   /**
-   * Check mode only
+   * Only check if files are formatted
    */
   check: boolean;
   /**
