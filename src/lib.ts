@@ -101,9 +101,7 @@ export class Lus {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
 
         const styleMatches = [
-          ...fileContent.matchAll(
-            /<style[^>]*\s+lang="stylus"[^>]*>/g
-          ),
+          ...fileContent.matchAll(/<style[^>]*\s+lang="stylus"[^>]*>/g),
         ];
         let newFileContent = fileContent;
         for (let styleMatch of styleMatches) {
@@ -111,7 +109,9 @@ export class Lus {
           const startStyleIndex = styleMatch?.index;
 
           if (startStyleTag && startStyleIndex) {
-            const endStyleIndex = fileContent.slice(startStyleIndex).indexOf('</style>') + startStyleIndex;
+            const endStyleIndex =
+              fileContent.slice(startStyleIndex).indexOf('</style>') +
+              startStyleIndex;
             const styleContent = fileContent.substring(
               startStyleIndex + startStyleTag.length,
               endStyleIndex
@@ -119,8 +119,8 @@ export class Lus {
             const formattedStyle = stylusSupremacy.format(
               styleContent,
               this.stylusSupremacyOptions
-              );
-            
+            );
+
             // Write new file content
             newFileContent = newFileContent.replace(
               styleContent,
@@ -128,9 +128,9 @@ export class Lus {
             );
           }
         }
-        
+
         fs.writeFileSync(filePath, newFileContent, 'utf-8');
-        
+
         resolve();
       } catch (error: any) {
         this.logger.error(error);
