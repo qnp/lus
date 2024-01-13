@@ -5,7 +5,6 @@ import type { LusOptions } from './lib';
 const testLusOptions: LusOptions = {
   verbose: true,
   config: '.test/.stylusrc',
-  ignore: [],
   globs: ['**/*.vue'],
 };
 

@@ -35,7 +35,7 @@ export interface LusOptions {
   /**
    * Verbose output
    */
-  verbose: boolean;
+  verbose?: boolean;
   /**
    * The config file name
    */
@@ -43,11 +43,11 @@ export interface LusOptions {
   /**
    * Only check if files are formatted
    */
-  check: boolean;
+  check?: boolean;
   /**
    * Ignore files matching these glob patterns
    */
-  ignore: string[];
+  ignore?: string[];
   /**
    * The glob patterns to match files
    */
@@ -66,7 +66,7 @@ export class Lus {
     // Assign options
     this.options = options;
     // Create logger
-    this.logger = new Logger(options.verbose);
+    this.logger = new Logger(options.verbose ?? false);
     // Get stylusrc options
     this.stylusSupremacyOptions = this.getConfigFileOptions();
   }
@@ -155,7 +155,7 @@ export class Lus {
   public async run(): Promise<void> {
     // Build glob options
     const globOptions = {
-      ignore: ['node_modules/**/*', ...this.options.ignore],
+      ignore: ['node_modules/**/*', ...(this.options.ignore ?? [])],
     };
     return new Promise((resolve, reject) => {
       try {
