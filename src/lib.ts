@@ -133,12 +133,12 @@ export class Lus {
           }
         }
 
-        if (!this.options.check) {
-          // Write new file content
-          fs.writeFileSync(filePath, newFileContent, 'utf-8');
-        } else if (fileContent !== newFileContent) {
-          throw `File ${filePath} is not formatted`;
+        if (this.options.check && fileContent !== newFileContent) {
+          throw new Error(`File ${filePath} is not formatted`);
         }
+
+        // Write new file content
+        fs.writeFileSync(filePath, newFileContent, 'utf-8');
 
         resolve();
       } catch (error: any) {
