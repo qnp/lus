@@ -133,10 +133,10 @@ export class Lus {
           }
         }
 
-        if(!this.options.check) {
+        if (!this.options.check) {
           // Write new file content
           fs.writeFileSync(filePath, newFileContent, 'utf-8');
-        }else if(fileContent !== newFileContent) {
+        } else if (fileContent !== newFileContent) {
           throw `File ${filePath} is not formatted`;
         }
 
