@@ -41,12 +41,12 @@ program
       globs,
     }
     const lus = new Lus(lusOptions);
-    
+
     lus.run().catch((error: unknown) => {
       console.error(error);
       process.exit(1);
     });
-    
+
   })
 
 program.parse();
