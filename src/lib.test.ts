@@ -65,7 +65,7 @@ beforeAll(() => {
 });
 
 afterAll(() => {
-  fs.rmdirSync('.test', { recursive: true });
+  fs.rmSync('.test', { recursive: true });
 });
 
 describe('Lus logger', () => {
