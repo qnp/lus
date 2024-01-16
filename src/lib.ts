@@ -142,7 +142,7 @@ export class Lus {
 
         resolve();
       } catch (error: any) {
-        this.logger.error(error);
+        this.logger.error(error.message);
         reject(error);
       }
     });
@@ -173,7 +173,6 @@ export class Lus {
           });
         }, Promise.resolve());
       } catch (error: unknown) {
-        this.logger.error(error);
         reject(error);
       }
     });

@@ -42,8 +42,7 @@ program
     }
     const lus = new Lus(lusOptions);
 
-    lus.run().catch((error: unknown) => {
-      console.error(error);
+    lus.run().catch((error: Error) => {
       process.exit(1);
     });
 
