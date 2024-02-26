@@ -35,15 +35,19 @@ export interface LusOptions {
   /**
    * Verbose output
    */
-  verbose: boolean;
+  verbose?: boolean;
   /**
    * The config file name
    */
   config: string;
   /**
+   * Only check if files are formatted
+   */
+  check?: boolean;
+  /**
    * Ignore files matching these glob patterns
    */
-  ignore: string[];
+  ignore?: string[];
   /**
    * The glob patterns to match files
    */
@@ -62,7 +66,7 @@ export class Lus {
     // Assign options
     this.options = options;
     // Create logger
-    this.logger = new Logger(options.verbose);
+    this.logger = new Logger(options.verbose ?? false);
     // Get stylusrc options
     this.stylusSupremacyOptions = this.getConfigFileOptions();
   }
@@ -129,11 +133,16 @@ export class Lus {
           }
         }
 
+        if (this.options.check && fileContent !== newFileContent) {
+          throw new Error(`File ${filePath} is not formatted`);
+        }
+
+        // Write new file content
         fs.writeFileSync(filePath, newFileContent, 'utf-8');
 
         resolve();
       } catch (error: any) {
-        this.logger.error(error);
+        this.logger.error(error.message);
         reject(error);
       }
     });
@@ -146,7 +155,7 @@ export class Lus {
   public async run(): Promise<void> {
     // Build glob options
     const globOptions = {
-      ignore: ['node_modules/**/*', ...this.options.ignore],
+      ignore: ['node_modules/**/*', ...(this.options.ignore ?? [])],
     };
     return new Promise((resolve, reject) => {
       try {
@@ -158,11 +167,12 @@ export class Lus {
           return seq.then(() => {
             this.logger.log('formatting', file);
             if (index === files.length - 1) resolve();
-            return this.format(file);
+            return this.format(file).catch((err: unknown) => {
+              reject(err);
+            });
           });
         }, Promise.resolve());
       } catch (error: unknown) {
-        this.logger.error(error);
         reject(error);
       }
     });

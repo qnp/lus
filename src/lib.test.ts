@@ -5,7 +5,6 @@ import type { LusOptions } from './lib';
 const testLusOptions: LusOptions = {
   verbose: true,
   config: '.test/.stylusrc',
-  ignore: [],
   globs: ['**/*.vue'],
 };
 
@@ -66,7 +65,7 @@ beforeAll(() => {
 });
 
 afterAll(() => {
-  fs.rmdirSync('.test', { recursive: true });
+  fs.rmSync('.test', { recursive: true });
 });
 
 describe('Lus logger', () => {
@@ -137,6 +136,14 @@ describe('Lus formatter', () => {
     await defaultTestLus.format('.test/Test.vue');
     expect(fs.readFileSync('.test/Test.vue', 'utf-8')).toEqual(
       testVueContent(outputStyleWithConfig)
+    );
+  });
+
+  it('throws when file is not formatted if option `check` is true', async () => {
+    fs.writeFileSync('.test/Test.vue', testVueContent(inputStyle), 'utf-8');
+    const defaultTestLus = new Lus({ ...testLusOptions, check: true });
+    await expect(defaultTestLus.format('.test/Test.vue')).rejects.toThrow(
+      'File .test/Test.vue is not formatted'
     );
   });
 });
