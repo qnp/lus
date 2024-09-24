@@ -1,14 +1,14 @@
 {
   "name": "@qnp/lus",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Command-line formatting of <style lang='stylus'> in Vue SFC files using Stylus Supremacy",
   "main": "dist/cli.js",
   "bin": {
     "lus": "dist/cli.js"
   },
   "scripts": {
-    "test": "jest",
-    "coverage": "jest --coverage",
+    "test": "vitest --run",
+    "coverage": "vitest --coverage",
     "release": "make release",
     "build": "tsc --outDir dist"
   },
@@ -34,14 +34,12 @@
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",
-    "@types/jest": "^27.4.0",
-    "jest": "^27.4.7",
-    "ts-jest": "^27.1.3",
-    "typescript": "^4.5.4"
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1"
   },
   "dependencies": {
     "commander": "^9.0.0",
     "glob": "^7.2.0",
-    "stylus-supremacy": "^2.15.0"
+    "stylus-supremacy": "^4.0.0"
   }
 }

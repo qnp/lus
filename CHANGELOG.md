@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.1
+
+- Upgrade deps
+- Remove jest in favor of vitest
+
 ## 0.4.0
 
 - Add `check` option for CI
@@ -10,7 +15,7 @@
 
 ## 0.2.0
 
-- Run sequencially
+- Run sequentially
 
 ## 0.1.0
 

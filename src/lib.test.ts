@@ -1,4 +1,6 @@
 import fs from 'fs';
+import { beforeAll, afterAll, describe, it, expect, vi } from 'vitest';
+
 import { Logger, Lus } from './lib';
 import type { LusOptions } from './lib';
 
@@ -69,13 +71,13 @@ afterAll(() => {
 });
 
 describe('Lus logger', () => {
-  const consoleLog = jest
+  const consoleLog = vi
     .spyOn(global.console, 'log')
     .mockImplementation(() => {});
-  const consoleWarn = jest
+  const consoleWarn = vi
     .spyOn(global.console, 'warn')
     .mockImplementation(() => {});
-  const consoleError = jest
+  const consoleError = vi
     .spyOn(global.console, 'error')
     .mockImplementation(() => {});
   it('does not log when not verbose', () => {
@@ -106,7 +108,7 @@ describe('Lus logger', () => {
 
 describe('Lus options resolver', () => {
   it('warns about missing config file and outputs empty config', () => {
-    const consoleWarn = jest
+    const consoleWarn = vi
       .spyOn(global.console, 'warn')
       .mockImplementation(() => {});
     const defaultTestLus = new Lus({ ...testLusOptions, config: '.missingrc' });
