@@ -11,7 +11,7 @@ const WARNING = '\x1b[33mwarning\x1b[0m';
 const ERROR = '\x1b[31merror\x1b[0m';
 
 /**
- * A simple loggin class
+ * A simple logging class
  */
 export class Logger {
   private verbose = false;

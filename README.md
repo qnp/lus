@@ -18,7 +18,7 @@ to print usage.
 
 ## Development and contribution
 
-- Write your functionalites or fixes.
+- Write your functionalities or fixes.
 - Write new tests for any new functionality.
 - Run `yarn test` to verify that everything is passing.
 - Generate new doc using `yarn doc` and commit the changes of DOCUMENTATION.md file.
